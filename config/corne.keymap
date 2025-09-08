@@ -18,12 +18,72 @@
     chain-length = <27>;
 };
 
+// Custom Behaviors
+
+/ {
+    behaviors {
+        hm: homerow_mods {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <600>;
+            quick-tap-ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+        hm_mo: homerow_momentary_layer {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <600>;
+            quick-tap-ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&kp>;
+        };
+    };
+};
+
+// Combos
+/*
+*   / {
+*      combos {
+*          compatible = "zmk,combos";
+*  
+*          combo_CMD_UP {
+*              timeout-ms = <300>;
+*              key-positions = <22 3>;
+*              bindings = <&kp LG(UP)>;
+*              layers = <0>;
+*          };
+*  
+*          combo_CMD_RIGHT {
+*              timeout-ms = <300>;
+*              key-positions = <22 16>;
+*              bindings = <&kp LG(RIGHT)>;
+*              layers = <0>;
+*          };
+*  
+*          combo_CMD_LEFT {
+*              timeout-ms = <300>;
+*              key-positions = <22 14>;
+*              bindings = <&kp LG(LEFT)>;
+*              layers = <0>;
+*          };
+*  
+*          combo_CMD_DOWN {
+*              timeout-ms = <300>;
+*              key-positions = <22 15>;
+*              bindings = <&kp LG(DOWN)>;
+*              layers = <0>;
+*          };
+*      };
+*  };
+*/
+// Keymap
+
 / {
     keymap {
         compatible = "zmk,keymap";
 
         default_layer {
-            display-name = "BAS";
             // -----------------------------------------------------------------------------------------
             // |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BKSP |
             // | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
@@ -31,15 +91,16 @@
             //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
 
             bindings = <
-&kp TAB    &kp Q  &kp W  &kp E     &kp R  &kp T        &kp Y    &kp U  &kp I      &kp O    &kp P     &kp BSPC
-&kp LCTRL  &kp A  &kp S  &kp D     &kp F  &kp G        &kp H    &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
-&kp LSHFT  &kp Z  &kp X  &kp C     &kp V  &kp B        &kp N    &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
-                         &kp LGUI  &mo 1  &kp SPACE    &kp RET  &mo 2  &kp RALT
+&kp TAB    &kp Q  &kp W  &kp E           &kp R  &kp T        &kp Y    &kp U  &kp I      &kp O    &kp P               &kp BACKSPACE
+&kp LCTRL  &kp A  &kp S  &kp D           &kp F  &kp G        &kp H    &kp J  &kp K      &kp L    &hm_mo 2 SEMICOLON  &kp SQT
+&kp LGUI   &kp Z  &kp X  &kp C           &kp V  &kp B        &kp N    &kp M  &kp COMMA  &kp DOT  &kp FSLH            &kp ESC
+                         &kp LEFT_SHIFT  &mo 1  &kp SPACE    &kp RET  &mo 2  &kp RALT
             >;
+
+            display-name = "DEF";
         };
 
-        lower_layer {
-            display-name = "LOW";
+        NumPad {
             // -----------------------------------------------------------------------------------------
             // |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BKSP |
             // | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   | LFT | DWN |  UP | RGT |     |      |
@@ -47,15 +108,16 @@
             //                    | GUI |     | SPC |   | ENT |     | ALT |
 
             bindings = <
-&kp TAB     &kp N1        &kp N2        &kp N3        &kp N4        &kp N5          &kp N6    &kp N7    &kp N8    &kp N9     &kp N0  &kp BSPC
-&bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4    &kp LEFT  &kp DOWN  &kp UP    &kp RIGHT  &trans  &trans
-&kp LSHFT   &trans        &trans        &trans        &trans        &trans          &trans    &trans    &trans    &trans     &trans  &trans
-                                        &kp LGUI      &trans        &kp SPACE       &kp RET   &trans    &kp RALT
+&kp TAB    &none  &none     &kp UP_ARROW  &none      &none        &kp SLASH     &mt AMPERSAND NUMBER_7    &mt ASTERISK NUMBER_8  &kp N9              &kp MINUS   &kp DELETE
+&kp LCTRL  &none  &kp LEFT  &kp DOWN      &kp RIGHT  &none        &kp ASTERISK  &mt DOLLAR NUMBER_4       &mt PERCENT NUMBER_5   &mt CARET NUMBER_6  &kp EQUAL   &mt PIPE BACKSLASH
+&kp LGUI   &mo 3  &none     &none         &none      &none        &kp N0        &mt EXCLAMATION NUMBER_1  &mt AT_SIGN NUMBER_2   &mt HASH NUMBER_3   &kp PERIOD  &none
+                            &kp LSHFT     &trans     &kp SPACE    &kp RET       &kp LCTRL                 &kp RALT
             >;
+
+            display-name = "NUM";
         };
 
-        raise_layer {
-            display-name = "RAI";
+        System {
             // -----------------------------------------------------------------------------------------
             // |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BKSP |
             // | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
@@ -63,22 +125,24 @@
             //                    | GUI |     | SPC |   | ENT |     | ALT |
 
             bindings = <
-&kp TAB    &kp EXCL  &kp AT  &kp HASH   &kp DLLR  &kp PRCNT    &kp CARET  &kp AMPS   &kp KP_MULTIPLY  &kp LPAR  &kp RPAR  &kp BSPC
-&kp LCTRL  &trans    &trans  &trans  &trans    &trans    &kp MINUS  &kp EQUAL  &kp LBKT         &kp RBKT  &kp BSLH  &kp GRAVE
-&kp LSHFT  &trans    &trans  &trans     &trans    &trans       &kp UNDER  &kp PLUS   &kp LBRC         &kp RBRC  &kp PIPE  &kp TILDE
-                             &kp LGUI   &studio_unlock    &kp SPACE    &kp RET    &studio_unlock     &kp RALT
+&kp TAB    &out OUT_TOG  &none         &kp UP_ARROW    &none         &none           &mt TILDE GRAVE  &mt RIGHT_BRACKET LEFT_BRACKET  &mt RIGHT_PARENTHESIS LEFT_PARENTHESIS  &mt GREATER_THAN LESS_THAN  &none   &trans
+&kp LCTRL  &bt BT_CLR    &kp LEFT      &kp DOWN        &kp RIGHT     &trans          &none            &kp LEFT_SHIFT                  &kp LCTRL                               &kp LGUI                    &trans  &none
+&kp LGUI   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2    &bt BT_SEL 3  &bt BT_SEL 4    &none            &none                           &none                                   &none                       &none   &none
+                                       &kp LEFT_SHIFT  &trans        &kp SPACE       &kp RET          &trans                          &kp RALT
             >;
-        };
-        extra_1 {
-            status = "reserved";
+
+            display-name = "SYS";
         };
 
-        extra_2 {
-            status = "reserved";
-        };
+        Function {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans    &kp F9  &kp F10  &kp F11  &kp F12  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &kp F5  &kp F6   &kp F7   &kp F8   &trans  &trans
+&trans  &mo 3   &trans  &trans  &trans  &trans    &kp F1  &kp F2   &kp F3   &kp F4   &trans  &trans
+                        &trans  &trans  &trans    &trans  &trans   &trans
+            >;
 
-        extra_3 {
-            status = "reserved";
+            display-name = "FN";
         };
     };
 };
